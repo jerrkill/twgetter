@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the overtrue/weather.
+ *
+ * (c) jerrkill <jerrkill123@gmail.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Jerrkill\Twgetter;
 
 class TwgetterServiceProvider extends \Illuminate\Support\ServiceProvider
@@ -14,7 +23,7 @@ class TwgetterServiceProvider extends \Illuminate\Support\ServiceProvider
             __DIR__.'/../config/config.php' => config_path('twgetter.php'),
         ]);
 
-        $this->app->singleton(Twgetter::class, function(){
+        $this->app->singleton(Twgetter::class, function () {
             return new Twgetter();
         });
 
