@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the overtrue/weather.
+ *
+ * (c) jerrkill <jerrkill123@gmail.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Jerrkill\Twgetter\Traits;
 
 trait UserTrait
@@ -18,7 +27,7 @@ trait UserTrait
             'withReactionsPerspective' => false,
             'withSuperFollowsTweetFields' => true,
             'withVoice' => false,
-            'withV2Timeline' => true
+            'withV2Timeline' => true,
         ];
         $features = [
             'dont_mention_me_view_api_enabled' => true,
@@ -33,6 +42,7 @@ trait UserTrait
             'variables' => \json_encode($variable),
             'features' => \json_encode($features),
         ];
+
         return $this->parseUserTweetsResponse($this->get($path, $params, $format));
     }
 
@@ -42,7 +52,7 @@ trait UserTrait
         $entries = $response['data']['user']['result']['timeline_v2']['timeline']['instructions'][1]['entries'];
 
         foreach ($entries as $entry) {
-            if ('TimelineTimelineItem' == $entry['content']['entryType']){
+            if ('TimelineTimelineItem' == $entry['content']['entryType']) {
                 $result = $entry['content']['itemContent']['tweet_results']['result'];
                 $user = $result['core']['user_results']['result']['legacy'];
                 $tweet = $result['legacy'];
