@@ -1,12 +1,18 @@
 <?php
 
+/*
+ * This file is part of the jerrkill/twgetter.
+ *
+ * (c) jerrkill <jerrkill123@gmail.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Jerrkill\Twgetter\Tests;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Psr7\Response;
-use Mockery\Matcher\AnyArgs;
-use Overtrue\Weather\Exceptions\HttpException;
 use Jerrkill\Twgetter\Twgetter;
 use PHPUnit\Framework\TestCase;
 
@@ -14,12 +20,10 @@ class TwgetterTest extends TestCase
 {
     public function testGetGetHttpClient()
     {
-
     }
 
     public function testSetGuzzleOptions()
     {
-
     }
 
     public function testAdvanceSearch()
@@ -68,7 +72,7 @@ class TwgetterTest extends TestCase
                 'Authorization' => $w->getAuthorization(),
             ],
             'query' => $params,
-        ])->andReturn($response);  
+        ])->andReturn($response);
 
         $w = \Mockery::mock(Twgetter::class)->makePartial();
         $w->allows()->getHttpClient()->andReturn($client);
