@@ -1,6 +1,8 @@
-<h1 align="center"> twgetter </h1>
+<h1 align="center"> Twgetter </h1>
 
-<p align="center"> A tweets getter.</p>
+<p align="center"> A Twitter Getter.</p>
+
+![StyleCI build status](https://github.styleci.io/repos/503480302/shield) 
 
 
 ## Installing

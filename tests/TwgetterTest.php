@@ -22,7 +22,7 @@ class TwgetterTest extends TestCase
 
     }
 
-    public function testAdvanceSearch()
+    public function testGetAdvanceSearch()
     {
         $response = new Response(200, [], '{"success": true}');
 
@@ -61,6 +61,10 @@ class TwgetterTest extends TestCase
         ];
 
         $w = \Mockery::mock(Twgetter::class)->makePartial();
+        $w->allows()->getXCsrfToken()->andReturn('mock-x-csrf-token');
+        $w->allows()->getCookie()->andReturn('mock-cookie');
+        $w->allows()->getAuthorization()->andReturn('mock-authorization');
+        $w->allows()->getBearerToken()->andReturn('mock-getBearerToken');
         $client->allows()->get('https://twitter.com/i/api/2/search/adaptive.json', [
             'headers' => [
                 'x-csrf-token' => $w->getXCsrfToken(),
@@ -73,6 +77,6 @@ class TwgetterTest extends TestCase
         $w = \Mockery::mock(Twgetter::class)->makePartial();
         $w->allows()->getHttpClient()->andReturn($client);
 
-        $this->assertSame(['success' => true], $w->advanceSearch('btc', 20, 'json'));
+        $this->assertSame(['success' => true], $w->getAdvanceSearch('btc', 20, 'json'));
     }
 }
