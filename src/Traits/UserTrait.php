@@ -51,15 +51,21 @@ trait UserTrait
     public function parseUserTweetsResponse($response)
     {
         $tws = [];
-        try{
-            if (empty($response['data']['user']['result']['timeline_v2']['timeline']['instructions'])) return $tws;
+        try {
+            if (empty($response['data']['user']['result']['timeline_v2']['timeline']['instructions'])) {
+                return $tws;
+            }
             $entries = $response['data']['user']['result']['timeline_v2']['timeline']['instructions'][1]['entries'];
 
             foreach ($entries as $entry) {
                 if ('TimelineTimelineItem' == $entry['content']['entryType']) {
-                    if (empty($entry['content']['itemContent']['tweet_results'])) continue;
+                    if (empty($entry['content']['itemContent']['tweet_results'])) {
+                        continue;
+                    }
                     $result = $entry['content']['itemContent']['tweet_results']['result'];
-                    if ('Tweet' !== $result['__typename']) continue;
+                    if ('Tweet' !== $result['__typename']) {
+                        continue;
+                    }
                     $user = $result['core']['user_results']['result']['legacy'];
                     $tweet = $result['legacy'];
                     $tw = [
@@ -83,8 +89,9 @@ trait UserTrait
                     array_push($tws, $tw);
                 }
             }
+
             return $tws;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             throw new ParseException($e->getMessage(), $e->getCode(), $e);
         }
     }

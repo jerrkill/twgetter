@@ -43,6 +43,7 @@ trait ListTrait
             'variables' => \json_encode($variables),
             'features' => \json_encode($features),
         ];
+
         return $this->parseListTweetsResponse($this->get($path, $params, $format));
     }
 
@@ -50,14 +51,20 @@ trait ListTrait
     {
         $tws = [];
         try {
-            if (empty($response['data']['list']['tweets_timeline']['timeline']['instructions'])) return $tws;
+            if (empty($response['data']['list']['tweets_timeline']['timeline']['instructions'])) {
+                return $tws;
+            }
             $entries = $response['data']['list']['tweets_timeline']['timeline']['instructions'][0]['entries'];
 
             foreach ($entries as $i => $entry) {
                 if ('TimelineTimelineItem' == $entry['content']['entryType']) {
-                    if (empty($entry['content']['itemContent']['tweet_results'])) continue;
+                    if (empty($entry['content']['itemContent']['tweet_results'])) {
+                        continue;
+                    }
                     $result = $entry['content']['itemContent']['tweet_results']['result'];
-                    if ('Tweet' !== $result['__typename']) continue;
+                    if ('Tweet' !== $result['__typename']) {
+                        continue;
+                    }
                     $user = $result['core']['user_results']['result']['legacy'];
                     $tweet = $result['legacy'];
                     $tw = [
@@ -83,7 +90,7 @@ trait ListTrait
             }
 
             return $tws;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             throw new ParseException($e->getMessage(), $e->getCode(), $e);
         }
     }

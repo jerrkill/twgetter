@@ -57,7 +57,7 @@ trait SearchTrait
     public function parseAdvanceSearchResponse($response)
     {
         $tws = [];
-        try{
+        try {
             $tweets = $response['globalObjects']['tweets'];
             $users = $response['globalObjects']['users'];
             foreach ($tweets as $tweet) {
@@ -79,8 +79,7 @@ trait SearchTrait
             }
 
             return $tws;
-
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             throw new ParseException($e->getMessage(), $e->getCode(), $e);
         }
     }
