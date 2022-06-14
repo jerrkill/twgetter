@@ -13,5 +13,4 @@ namespace Jerrkill\Twgetter\Exceptions;
 
 class ParseException extends Exception
 {
-    
 }
