@@ -50,7 +50,7 @@ class Twgetter
                 ],
             ])->getBody()->getContents();
 
-            return 'json' === $format ? \json_decode($response, true) : $response;
+            return 'array' === $format ? \json_decode($response, true) : $response;
         } catch (\Exception $e) {
             throw new HttpException($e->getMessage(), $e->getCode(), $e);
         }

@@ -11,6 +11,8 @@
 
 namespace Jerrkill\Twgetter\Traits;
 
+use Jerrkill\Twgetter\Exceptions\ParseException;
+
 trait SearchTrait
 {
     public function getAdvanceSearch(string $q, int $count, string $format = 'array')
@@ -55,26 +57,31 @@ trait SearchTrait
     public function parseAdvanceSearchResponse($response)
     {
         $tws = [];
-        $tweets = $response['globalObjects']['tweets'];
-        $users = $response['globalObjects']['users'];
-        foreach ($tweets as $tweet) {
-            $tw = [
-                'id' => $tweet['id_str'],
-                'author_id' => $tweet['user_id_str'],
-                'author_name' => $users[$tweet['user_id_str']]['name'],
-                'author_username' => $users[$tweet['user_id_str']]['screen_name'],
-                'text' => $tweet['full_text'],
-                'created_at' => $tweet['created_at'],
-                'retweet_count' => $tweet['retweet_count'],
-                'reply_count' => $tweet['reply_count'],
-                'like_count' => $tweet['favorite_count'],
-                'quote_count' => $tweet['quote_count'],
+        try{
+            $tweets = $response['globalObjects']['tweets'];
+            $users = $response['globalObjects']['users'];
+            foreach ($tweets as $tweet) {
+                $tw = [
+                    'id' => $tweet['id_str'],
+                    'author_id' => $tweet['user_id_str'],
+                    'author_name' => $users[$tweet['user_id_str']]['name'],
+                    'author_username' => $users[$tweet['user_id_str']]['screen_name'],
+                    'text' => $tweet['full_text'],
+                    'created_at' => $tweet['created_at'],
+                    'retweet_count' => $tweet['retweet_count'],
+                    'reply_count' => $tweet['reply_count'],
+                    'like_count' => $tweet['favorite_count'],
+                    'quote_count' => $tweet['quote_count'],
 
-                'lang' => $tweet['lang'],
-            ];
-            array_push($tws, $tw);
+                    'lang' => $tweet['lang'],
+                ];
+                array_push($tws, $tw);
+            }
+
+            return $tws;
+
+        }catch (\Exception $e) {
+            throw new ParseException($e->getMessage(), $e->getCode(), $e);
         }
-
-        return $tws;
     }
 }
