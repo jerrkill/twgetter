@@ -2,7 +2,7 @@
 
 <p align="center"> A Twitter Getter.</p>
 
-[![StyleCI](https://github.styleci.io/repos/503480302/shield?branch=master)]
+![StyleCI build status](https://github.styleci.io/repos/503480302/shield) 
 
 
 ## Installing
