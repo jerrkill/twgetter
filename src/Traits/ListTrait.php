@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the overtrue/weather.
+ *
+ * (c) jerrkill <jerrkill123@gmail.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Jerrkill\Twgetter\Traits;
 
 trait ListTrait
@@ -32,6 +41,7 @@ trait ListTrait
             'variables' => \json_encode($variables),
             'features' => \json_encode($features),
         ];
+
         return $this->parseListTweetsResponse($this->get($path, $params, $format));
     }
 
@@ -41,7 +51,7 @@ trait ListTrait
         $entries = $response['data']['list']['tweets_timeline']['timeline']['instructions'][0]['entries'];
 
         foreach ($entries as $entry) {
-            if ('TimelineTimelineItem' == $entry['content']['entryType']){
+            if ('TimelineTimelineItem' == $entry['content']['entryType']) {
                 $result = $entry['content']['itemContent']['tweet_results']['result'];
                 $user = $result['core']['user_results']['result']['legacy'];
                 $tweet = $result['legacy'];
