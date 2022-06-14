@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the jerrkill/twgetter.
+ *
+ * (c) jerrkill <jerrkill123@gmail.com>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Jerrkill\Twgetter;
 
 use GuzzleHttp\Client;
@@ -29,7 +38,7 @@ class Twgetter
 
     public function get(string $path, array $params, string $format = 'array')
     {
-        $url = $this->baseUri . $path;
+        $url = $this->baseUri.$path;
 
         try {
             $response = $this->getHttpClient()->get($url, [
@@ -38,13 +47,13 @@ class Twgetter
                     'x-csrf-token' => $this->getXCsrfToken(),
                     'cookie' => $this->getCookie(),
                     'Authorization' => $this->getAuthorization(),
-                ]
+                ],
             ])->getBody()->getContents();
 
             return 'json' === $format ? \json_decode($response, true) : $response;
         } catch (\Exception $e) {
-           throw new HttpException($e->getMessage(), $e->getCode(), $e);
-       }
+            throw new HttpException($e->getMessage(), $e->getCode(), $e);
+        }
     }
 
     public function getAuthorization()
