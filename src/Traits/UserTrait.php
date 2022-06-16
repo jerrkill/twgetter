@@ -15,10 +15,12 @@ use Jerrkill\Twgetter\Exceptions\ParseException;
 
 trait UserTrait
 {
-    public function getUserTweets(int $userId, int $count = 10, string $format = 'array')
+    // use ParseTrait;
+
+    public function getUserTweets(int $userId, int $count = 10, string $page = NULL)
     {
         $path = 'graphql/d5UzUAEWLvAi5HU8stUlXw/UserTweets';
-        $variable = [
+        $variables = [
             'userId' => $userId,
             'count' => $count,
             'includePromotedContent' => true,
@@ -41,56 +43,148 @@ trait UserTrait
             'responsive_web_enhance_cards_enabled' => false,
         ];
         $params = [
-            'variables' => \json_encode($variable),
+            'variables' => \json_encode($variables),
             'features' => \json_encode($features),
         ];
 
-        return $this->parseUserTweetsResponse($this->get($path, $params, $format));
+        return $this->parseUserTweetsResponse($this->get($path, $params));
     }
 
     public function parseUserTweetsResponse($response)
     {
-        $tws = [];
         try {
-            if (empty($response['data']['user']['result']['timeline_v2']['timeline']['instructions'])) {
-                return $tws;
-            }
-            $entries = $response['data']['user']['result']['timeline_v2']['timeline']['instructions'][1]['entries'];
+            return $this->parseTimeline($response['data']['user']['result']['timeline_v2']['timeline']);
+        } catch (\Exception $e) {
+            throw new ParseException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
 
-            foreach ($entries as $entry) {
-                if ('TimelineTimelineItem' == $entry['content']['entryType']) {
-                    if (empty($entry['content']['itemContent']['tweet_results'])) {
-                        continue;
-                    }
-                    $result = $entry['content']['itemContent']['tweet_results']['result'];
-                    if ('Tweet' !== $result['__typename']) {
-                        continue;
-                    }
-                    $user = $result['core']['user_results']['result']['legacy'];
-                    $tweet = $result['legacy'];
-                    $tw = [
-                        'id' => $tweet['id_str'],
-                        'author_id' => $tweet['user_id_str'],
-                        'author_name' => $user['name'],
-                        'author_username' => $user['screen_name'],
-                        'text' => $tweet['full_text'],
-                        'created_at' => $tweet['created_at'],
-                        'retweet_count' => $tweet['retweet_count'],
-                        'reply_count' => $tweet['reply_count'],
-                        'like_count' => $tweet['favorite_count'],
-                        'quote_count' => $tweet['quote_count'],
+    public function getUserFollowing(int $userId, int $count = 10, string $page = NULL)
+    {
+        $path = 'graphql/ih3I-XV0ogyWjqsHqFQ9eA/Following';
+        $variables = [
+            'userId' => $userId,
+            'count' => $count,
+            'includePromotedContent' => true,
+            'withSuperFollowsUserFields' => true,
+            'withDownvotePerspective' => false,
+            'withReactionsMetadata' => false,
+            'withReactionsPerspective' => false,
+            'withSuperFollowsTweetFields' => true,
+        ];
+        $features = [
+            'dont_mention_me_view_api_enabled' => true,
+            'interactive_text_enabled' => true,
+            'responsive_web_uc_gql_enabled' => false,
+            'vibe_tweet_context_enabled' => false,
+            'responsive_web_edit_tweet_api_enabled' => false,
+            'standardized_nudges_misinfo' => false,
+            'responsive_web_enhance_cards_enabled' => false,
+        ];
+        if (NULL !== $page) {
+            $variables['cursor'] = $page;
+        }
+        $params = [
+            'variables' => \json_encode($variables),
+            'features' => \json_encode($features),
+        ];
 
-                        'lang' => $tweet['lang'],
-                    ];
+        return $this->parseUserFollowingResponse($this->get($path, $params));
+    }
 
-                    if (isset($tweet['retweeted_status_result']) && $tweet['retweeted_status_result']) {
-                        $tw['referenced_tweet_id'] = $tweet['retweeted_status_result']['result']['legacy']['id_str'];
-                    }
-                    array_push($tws, $tw);
-                }
-            }
+    public function parseUserFollowingResponse($response)
+    {
+        $users = [];
+        try {
+            $users = $this->parseTimeline($response['data']['user']['result']['timeline']['timeline']);
+            return $users;
+        } catch (\Exception $e) {
+            throw new ParseException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
 
-            return $tws;
+    public function getUserFollowers(int $userId, int $count = 20, string $page = NULL)
+    {
+        $path = 'graphql/ysj_6Bszzl-X7e4bmvYpBA/Followers';
+        $variables = [
+            'userId' => $userId,
+            'count' => $count,
+            'includePromotedContent' => false,
+            'withSuperFollowsUserFields' => true,
+            'withDownvotePerspective' => false,
+            'withReactionsMetadata' => false,
+            'withReactionsPerspective' => false,
+            'withSuperFollowsTweetFields' => true,
+        ];
+        $features = [
+            'dont_mention_me_view_api_enabled' => true,
+            'interactive_text_enabled' => true,
+            'responsive_web_uc_gql_enabled' => false,
+            'vibe_tweet_context_enabled' => false,
+            'responsive_web_edit_tweet_api_enabled' => false,
+            'standardized_nudges_misinfo' => false,
+            'responsive_web_enhance_cards_enabled' => false,
+        ];
+        if (NULL !== $page) {
+            $variables['cursor'] = $page;
+        }
+        $params = [
+            'variables' => \json_encode($variables),
+            'features' => \json_encode($features),
+        ];
+
+        return $this->parseUserFollowersResponse($this->get($path, $params));
+    }
+
+    public function parseUserFollowersResponse($response)
+    {
+        $users = [];
+        try {
+            $users = $this->parseTimeline($response['data']['user']['result']['timeline']['timeline']);
+            return $users;
+        } catch (\Exception $e) {
+            throw new ParseException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+    public function getUserLists(int $userId, int $count = 10, string $page = NULL)
+    {
+        $path = 'graphql/nzPbVEpjCRdwPadJw9IR8g/CombinedLists';
+
+        $variables = [
+            'userId' => $userId,
+            'count' => $count,
+            'includePromotedContent' => true,
+            'withSuperFollowsUserFields' => true,
+            'withDownvotePerspective' => false,
+            'withReactionsMetadata' => false,
+            'withReactionsPerspective' => false,
+            'withSuperFollowsTweetFields' => true,
+        ];
+        $features = [
+            'dont_mention_me_view_api_enabled' => true,
+            'interactive_text_enabled' => true,
+            'responsive_web_uc_gql_enabled' => false,
+            'vibe_tweet_context_enabled' => false,
+            'responsive_web_edit_tweet_api_enabled' => false,
+            'standardized_nudges_misinfo' => false,
+            'responsive_web_enhance_cards_enabled' => false,
+        ];
+        if (NULL !== $page) {
+            $variables['cursor'] = $page;
+        }
+        $params = [
+            'variables' => \json_encode($variables),
+            'features' => \json_encode($features),
+        ];
+
+        return $this->parseUserListsResponse($this->get($path, $params));
+    }
+
+    public function parseUserListsResponse($response)
+    {
+        try {
+            return $this->parseTimeline($response['data']['user']['result']['timeline']['timeline']);
         } catch (\Exception $e) {
             throw new ParseException($e->getMessage(), $e->getCode(), $e);
         }

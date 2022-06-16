@@ -15,7 +15,10 @@ use Jerrkill\Twgetter\Exceptions\ParseException;
 
 trait ListTrait
 {
-    public function getListTweets(int $listId, int $count = 20, string $format = 'array')
+    
+    // use ParseTrait;
+
+    public function getListTweets(int $listId, int $count = 10, string $page = NULL)
     {
         $path = 'graphql/vUME3Ko13lCWTSs-fEKPZQ/ListLatestTweetsTimeline';
 
@@ -38,13 +41,25 @@ trait ListTrait
             'standardized_nudges_for_misinfo_nudges_enabled' => false,
             'responsive_web_enhance_cards_enabled' => false,
         ];
-
+        if (NULL !== $page) {
+            $variables['cursor'] = $page;
+            var_dump($page);
+        }
         $params = [
             'variables' => \json_encode($variables),
             'features' => \json_encode($features),
         ];
 
-        return $this->parseListTweetsResponse($this->get($path, $params, $format));
+        return $this->parseListTweetsResponseV2($this->get($path, $params));
+    }
+
+    public function parseListTweetsResponseV2($response)
+    {
+        try {
+            return $this->parseTimeline($response['data']['list']['tweets_timeline']['timeline']);
+        }catch (\Exception $e) {
+            throw new ParseException($e->getMessage(), $e->getCode(), $e);
+        }
     }
 
     public function parseListTweetsResponse($response)

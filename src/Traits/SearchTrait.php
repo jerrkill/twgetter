@@ -15,7 +15,7 @@ use Jerrkill\Twgetter\Exceptions\ParseException;
 
 trait SearchTrait
 {
-    public function getAdvanceSearch(string $q, int $count, string $format = 'array')
+    public function getAdvanceSearch(string $q, int $count)
     {
         $path = '2/search/adaptive.json';
         $params = [
@@ -51,7 +51,7 @@ trait SearchTrait
             'q' => $q,
         ];
 
-        return $this->parseAdvanceSearchResponse($this->get($path, $params, $format));
+        return $this->parseAdvanceSearchResponse($this->get($path, $params));
     }
 
     public function parseAdvanceSearchResponse($response)

@@ -13,12 +13,14 @@ namespace Jerrkill\Twgetter;
 
 use GuzzleHttp\Client;
 use Jerrkill\Twgetter\Exceptions\HttpException;
+use Jerrkill\Twgetter\Traits\ParseTrait;
 use Jerrkill\Twgetter\Traits\ListTrait;
 use Jerrkill\Twgetter\Traits\SearchTrait;
 use Jerrkill\Twgetter\Traits\UserTrait;
 
 class Twgetter
 {
+    use ParseTrait;
     use ListTrait;
     use SearchTrait;
     use UserTrait;
@@ -36,7 +38,7 @@ class Twgetter
         $this->guzzleOptions = $options;
     }
 
-    public function get(string $path, array $params, string $format = 'array')
+    public function get(string $path, array $params)
     {
         $url = $this->baseUri.$path;
 
@@ -50,7 +52,7 @@ class Twgetter
                 ],
             ])->getBody()->getContents();
 
-            return 'array' === $format ? \json_decode($response, true) : $response;
+            return \json_decode($response, true);
         } catch (\Exception $e) {
             throw new HttpException($e->getMessage(), $e->getCode(), $e);
         }
