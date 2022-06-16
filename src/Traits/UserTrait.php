@@ -17,7 +17,7 @@ trait UserTrait
 {
     // use ParseTrait;
 
-    public function getUserTweets(int $userId, int $count = 10, string $page = NULL)
+    public function getUserTweets(int $userId, int $count = 10, string $page = null)
     {
         $path = 'graphql/d5UzUAEWLvAi5HU8stUlXw/UserTweets';
         $variables = [
@@ -59,7 +59,7 @@ trait UserTrait
         }
     }
 
-    public function getUserFollowing(int $userId, int $count = 10, string $page = NULL)
+    public function getUserFollowing(int $userId, int $count = 10, string $page = null)
     {
         $path = 'graphql/ih3I-XV0ogyWjqsHqFQ9eA/Following';
         $variables = [
@@ -81,7 +81,7 @@ trait UserTrait
             'standardized_nudges_misinfo' => false,
             'responsive_web_enhance_cards_enabled' => false,
         ];
-        if (NULL !== $page) {
+        if (null !== $page) {
             $variables['cursor'] = $page;
         }
         $params = [
@@ -97,13 +97,14 @@ trait UserTrait
         $users = [];
         try {
             $users = $this->parseTimeline($response['data']['user']['result']['timeline']['timeline']);
+
             return $users;
         } catch (\Exception $e) {
             throw new ParseException($e->getMessage(), $e->getCode(), $e);
         }
     }
 
-    public function getUserFollowers(int $userId, int $count = 20, string $page = NULL)
+    public function getUserFollowers(int $userId, int $count = 20, string $page = null)
     {
         $path = 'graphql/ysj_6Bszzl-X7e4bmvYpBA/Followers';
         $variables = [
@@ -125,7 +126,7 @@ trait UserTrait
             'standardized_nudges_misinfo' => false,
             'responsive_web_enhance_cards_enabled' => false,
         ];
-        if (NULL !== $page) {
+        if (null !== $page) {
             $variables['cursor'] = $page;
         }
         $params = [
@@ -141,13 +142,14 @@ trait UserTrait
         $users = [];
         try {
             $users = $this->parseTimeline($response['data']['user']['result']['timeline']['timeline']);
+
             return $users;
         } catch (\Exception $e) {
             throw new ParseException($e->getMessage(), $e->getCode(), $e);
         }
     }
 
-    public function getUserLists(int $userId, int $count = 10, string $page = NULL)
+    public function getUserLists(int $userId, int $count = 10, string $page = null)
     {
         $path = 'graphql/nzPbVEpjCRdwPadJw9IR8g/CombinedLists';
 
@@ -170,7 +172,7 @@ trait UserTrait
             'standardized_nudges_misinfo' => false,
             'responsive_web_enhance_cards_enabled' => false,
         ];
-        if (NULL !== $page) {
+        if (null !== $page) {
             $variables['cursor'] = $page;
         }
         $params = [
