@@ -23,6 +23,17 @@ TWGETTER_BEARER_TOKEN=''
 
 ## Usage
 
+**method support:**
+
+* getAdvanceSearch
+* getUserTweets
+* getListTweets
+* getUserLists
+* getUserFollowers
+* getUserFollowing
+* getUserByUsername
+
+
 ```php
 use Jerrkill\Twgetter\Twgetter;
 
@@ -285,7 +296,7 @@ $response = $twg->getUserLists(1127061095422672897,2, '1376636817089396750|15375
 
 ```php
 
-$response = $twg->getUserLists(1127061095422672897, 20, '1376636817089396750|1537537126084640764');
+$response = $twg->getUserFollowing(1127061095422672897, 20, '1376636817089396750|1537537126084640764');
 
 ```
 
@@ -293,7 +304,7 @@ $response = $twg->getUserLists(1127061095422672897, 20, '1376636817089396750|153
 
 ```php
 
-$response = $twg->getUserLists(1127061095422672897, 20, '1376636817089396750|1537537126084640764');
+$response = $twg->getUserFollowers(1127061095422672897, 20, '1376636817089396750|1537537126084640764');
 
 ```
 
@@ -360,6 +371,32 @@ $response = $twg->getUserLists(1127061095422672897, 20, '1376636817089396750|153
     "meta": {
         "next_page": "1723820479658998759|1537543786677141486",
         "previous_page": "-1|1537543786677141505"
+    }
+}
+```
+
+```php
+
+$twg->getUserByUsername('CoinMarketCap');
+
+```
+
+```json
+{
+    "id": "2260491445",
+    "name": "CoinMarketCap",
+    "username": "CoinMarketCap",
+    "description": "Showcasing the crypto revolution to +340M monthly visitors. Start your journey here (https:\/\/t.co\/fJ6p40tTvW). Learn about crypto here (@CMCAlexandria).",
+    "verified": true,
+    "location": "Decentralized",
+    "created_at": "Tue Dec 24 16:50:12 +0000 2013",
+    "profile_image_url": "https:\/\/pbs.twimg.com\/profile_images\/1521694222734495744\/q2VAXMgE_normal.jpg",
+    "public_metrics": {
+        "followers_count": 5440368,
+        "following_count": 1859,
+        "tweet_count": 18849,
+        "listed_count": 16231,
+        "like_count": 5860
     }
 }
 ```

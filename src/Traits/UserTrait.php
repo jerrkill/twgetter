@@ -189,4 +189,29 @@ trait UserTrait
             throw new ParseException($e->getMessage(), $e->getCode(), $e);
         }
     }
+
+    public function getUserByUsername($username)
+    {
+        $path = 'graphql/mCbpQvZAw6zu_4PvuAUVVQ/UserByScreenName';
+        $variables = [
+            'screen_name' => $username,
+            'withSafetyModeUserFields' => true,
+            'withSuperFollowsUserFields' => true,
+        ];
+        $params = [
+            'variables' => \json_encode($variables),
+        ];
+        return $this->parseUserResponse($this->get($path, $params));
+    }
+
+    public function parseUserResponse($response)
+    {
+        try {
+            $results['result'] = $response['data']['user']['result'];
+            return $this->parseUserResults($results);
+        } catch (\Exception $e) {
+            throw new ParseException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+    
 }
