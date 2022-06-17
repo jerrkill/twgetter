@@ -19,7 +19,7 @@ trait ParseTrait
     {
         $response = $lists = $tweets = $users = $meta = [];
         try {
-            if ( !(isset($timeline['instructions']) && $instructions = $timeline['instructions']) ) {
+            if (!(isset($timeline['instructions']) && $instructions = $timeline['instructions'])) {
                 return [];
             }
             $instructions = [];
@@ -39,7 +39,6 @@ trait ParseTrait
                         }
                     }
                     if ('TimelineTimelineItem' === $content['entryType']) {
-
                         // users
                         if ('TimelineUser' === $content['itemContent']['itemType']) {
                             $user = $this->parseUserResults($content['itemContent']['user_results']);
@@ -54,7 +53,7 @@ trait ParseTrait
                             $list = [
                                 'id' => $li['id_str'],
                                 'name' => $li['name'],
-                                'description' =>  $li['description'],
+                                'description' => $li['description'],
                                 'mode' => $li['mode'],
                                 'created_at' => $li['created_at'],
                                 'member_count' => $li['member_count'],
@@ -67,7 +66,6 @@ trait ParseTrait
 
                         // tweets
                         if ('TimelineTweet' === $content['itemContent']['itemType']) {
-                            
                             $tweet = $this->parseTweetResults($content['itemContent']['tweet_results']);
                             if ($tweet) {
                                 array_push($tweets, $tweet);
@@ -76,6 +74,7 @@ trait ParseTrait
                     }
                 }
             }
+
             return [
                 'tweets' => $tweets,
                 'users' => $users,
@@ -89,7 +88,7 @@ trait ParseTrait
 
     public function parseUserResults($results)
     {
-        try{
+        try {
             if (empty($results)) {
                 return [];
             }
@@ -103,7 +102,7 @@ trait ParseTrait
                 'id' => $ruId,
                 'name' => $ru['name'],
                 'username' => $ru['screen_name'],
-                'description' =>  $ru['description'],
+                'description' => $ru['description'],
                 'verified' => $ru['verified'],
                 'location' => $ru['location'],
                 'created_at' => $ru['created_at'],
@@ -114,8 +113,9 @@ trait ParseTrait
                     'tweet_count' => $ru['statuses_count'],
                     'listed_count' => $ru['listed_count'],
                     'like_count' => $ru['favourites_count'],
-                ]
+                ],
             ];
+
             return $user;
         } catch (\Exception $e) {
             throw new ParseException($e->getMessage(), $e->getCode(), $e);
@@ -155,10 +155,10 @@ trait ParseTrait
             if (isset($remote['retweeted_status_result']) && $remote['retweeted_status_result']) {
                 $tw['referenced_tweet_id'] = $remote['retweeted_status_result']['result']['legacy']['id_str'];
             }
+
             return $tweet;
         } catch (\Exception $e) {
             throw new ParseException($e->getMessage(), $e->getCode(), $e);
         }
-
     }
 }
