@@ -203,6 +203,7 @@ trait UserTrait
         $params = [
             'variables' => \json_encode($variables),
         ];
+
         return $this->parseUserResponse($this->get($path, $params));
     }
 
@@ -210,10 +211,10 @@ trait UserTrait
     {
         try {
             $results['result'] = $response['data']['user']['result'];
+
             return $this->parseUserResults($results);
         } catch (\Exception $e) {
             throw new ParseException($e->getMessage(), $e->getCode(), $e);
         }
     }
-    
 }
