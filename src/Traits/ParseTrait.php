@@ -156,6 +156,10 @@ trait ParseTrait
                 $tw['referenced_tweet_id'] = $remote['retweeted_status_result']['result']['legacy']['id_str'];
             }
 
+            if (isset($remote['entities'])) {
+                $tweet['entities'] = $remote['entities'];
+            }
+
             return $tweet;
         } catch (\Exception $e) {
             throw new ParseException($e->getMessage(), $e->getCode(), $e);
