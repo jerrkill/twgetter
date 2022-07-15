@@ -72,6 +72,7 @@ trait SearchTrait
                     'reply_count' => $tweet['reply_count'],
                     'like_count' => $tweet['favorite_count'],
                     'quote_count' => $tweet['quote_count'],
+                    'self_thread' => (isset($tweet['self_thread']['id_str']) && $tweet['self_thread']['id_str']) ? $tweet['self_thread']['id_str'] : 0,
 
                     'lang' => $tweet['lang'],
                 ];

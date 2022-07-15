@@ -148,6 +148,7 @@ trait ParseTrait
                 'reply_count' => $remote['reply_count'],
                 'like_count' => $remote['favorite_count'],
                 'quote_count' => $remote['quote_count'],
+                'self_thread' => (isset($remote['self_thread']['id_str']) && $remote['self_thread']['id_str']) ? $remote['self_thread']['id_str'] : 0,
 
                 'lang' => $remote['lang'],
             ];

@@ -42,7 +42,6 @@ trait ListTrait
         ];
         if (null !== $page) {
             $variables['cursor'] = $page;
-            var_dump($page);
         }
         $params = [
             'variables' => \json_encode($variables),
@@ -92,6 +91,7 @@ trait ListTrait
                         'reply_count' => $tweet['reply_count'],
                         'like_count' => $tweet['favorite_count'],
                         'quote_count' => $tweet['quote_count'],
+                        'self_thread' => (isset($tweet['self_thread']['id_str']) && $tweet['self_thread']['id_str']) ? $tweet['self_thread']['id_str'] : 0,
 
                         'lang' => $tweet['lang'],
                     ];
