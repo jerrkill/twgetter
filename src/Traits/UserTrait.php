@@ -15,6 +15,15 @@ use Jerrkill\Twgetter\Exceptions\ParseException;
 
 trait UserTrait
 {
+
+
+    public function getUserTweetsV2($username, $count = 20, $start = null, $end = null)
+    {
+        $scraper = $this->getTwitterScraperInstance()->search("(from:{$username})", $start, $end)->setTotal($count)->setChunkSize($count)->run();
+        $response = $scraper->getTweets();
+        return $this->parseScraperTweets($response);
+    }
+
     // use ParseTrait;
 
     public function getUserTweets(int $userId, int $count = 10, string $page = null)

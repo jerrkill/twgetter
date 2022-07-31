@@ -15,6 +15,61 @@ use Jerrkill\Twgetter\Exceptions\ParseException;
 
 trait ParseTrait
 {
+    public function parseScraperTweets($tws)
+    {
+        $tweets = [];
+        try {
+            foreach($tws as $tw) {
+                $tweet = $this->parseScraperTweet($tw);
+                array_push($tweets, $tweet);
+            }
+            return [
+                'tweets' => $tweets,
+                'meta' => [],
+            ];
+        } catch (\Exception $e) {
+            throw new ParseException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+    public function parseScraperTweet($remoteTw)
+    {
+        $tweet = [];
+        try {
+            if (empty($remoteTw)) {
+                return [];
+            }
+            $tweet = [
+                'id' => $remoteTw['tweetId'],
+                'author_id' => $remoteTw['user_id'],
+                'author_name' => $remoteTw['user_fullname'],
+                'author_username' => $remoteTw['user_name'],
+                'text' => $remoteTw['text'],
+                'created_at' => $remoteTw['datetime']->format("Y-m-d\TH:i:s"),
+                'retweet_count' => $remoteTw['retweets'],
+                'reply_count' => $remoteTw['replies'],
+                'like_count' => $remoteTw['likes'],
+                'quote_count' => $remoteTw['quotes'],
+                'self_thread' => $remoteTw['self_thread'],
+                'reply_to' => $remoteTw['reply_to'],
+                'reply_to_tweet_id' => $remoteTw['reply_to_tweet_id'],
+
+                'lang' => $remoteTw['lang'],
+            ];
+
+            if (isset($remoteTw['retweeted_status_result']) && $remoteTw['retweeted_status_result']) {
+                $tw['referenced_tweet_id'] = $remoteTw['retweeted_status_result']['result']['legacy']['id_str'];
+            }
+
+            if (isset($remoteTw['entities'])) {
+                $tweet['entities'] = $remoteTw['entities'];
+            }
+
+            return $tweet;
+        } catch (\Exception $e) {
+            throw new ParseException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
     public function parseTimeline($timeline)
     {
         $response = $lists = $tweets = $users = $meta = [];

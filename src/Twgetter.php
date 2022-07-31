@@ -18,6 +18,11 @@ use Jerrkill\Twgetter\Traits\ListTrait;
 use Jerrkill\Twgetter\Traits\SearchTrait;
 use Jerrkill\Twgetter\Traits\UserTrait;
 
+// use SergiX44\Scraper\TwitterScraper;
+
+use Jerrkill\Twgetter\Scraper;
+
+
 class Twgetter
 {
     use ParseTrait;
@@ -77,4 +82,14 @@ class Twgetter
     {
         return config('twgetter.cookie');
     }
+
+    public static $scraperInstance = NULL;
+    public function getTwitterScraperInstance()
+    {
+        if (static::$scraperInstance === NULL) {
+            static::$scraperInstance = Scraper::make($this->guzzleOptions);
+        }
+        return static::$scraperInstance;
+    }
+
 }
