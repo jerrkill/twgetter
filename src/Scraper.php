@@ -246,6 +246,7 @@ class Scraper
 
     protected function queryInterval(string $query)
     {
+        print_r($query);
         $oldestTweetDate = null;
         if (!isset($this->options['headers']['X-Guest-Token'])) {
             $this->refreshGuestToken();

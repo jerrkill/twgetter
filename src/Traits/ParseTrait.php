@@ -53,6 +53,9 @@ trait ParseTrait
                 'self_thread' => $remoteTw['self_thread'],
                 'reply_to' => $remoteTw['reply_to'],
                 'reply_to_tweet_id' => $remoteTw['reply_to_tweet_id'],
+                'images' => $remoteTw['images'],
+                'hashtags' => $remoteTw['hashtags'],
+                'mentions' => $remoteTw['mentions'],
 
                 'lang' => $remoteTw['lang'],
             ];
