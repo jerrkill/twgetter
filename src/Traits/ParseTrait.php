@@ -56,6 +56,7 @@ trait ParseTrait
                 'images' => $remoteTw['images'],
                 'hashtags' => $remoteTw['hashtags'],
                 'mentions' => $remoteTw['mentions'],
+                'is_card' => $remoteTw['is_card'],
 
                 'lang' => $remoteTw['lang'],
             ];

@@ -326,6 +326,7 @@ class Scraper
                         'lang' => $scrapedTweet['lang'],
                         'self_thread' => $scrapedTweet['self_thread']['id_str'] ?? 0,
                         'reply_to_tweet_id' => $scrapedTweet['in_reply_to_status_id_str'] ?? 0,
+                        'is_card' => isset($scrapedTweet['card']),
                     ];
 
                     if ($this->fetchedTweets % $this->chunkSize === 0) {
