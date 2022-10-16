@@ -15,12 +15,11 @@ use Jerrkill\Twgetter\Exceptions\ParseException;
 
 trait UserTrait
 {
-
-
     public function getUserTweetsV2($username, $count = 20, $start = null, $end = null)
     {
         $scraper = $this->getTwitterScraperInstance()->search("(from:{$username})", $start, $end)->setTotal($count)->setChunkSize($count)->run();
         $response = $scraper->getTweets();
+
         return $this->parseScraperTweets($response);
     }
 
@@ -30,30 +29,30 @@ trait UserTrait
     {
         $path = 'graphql/d5UzUAEWLvAi5HU8stUlXw/UserTweets';
         $variables = [
-            'userId' => $userId,
-            'count' => $count,
-            'includePromotedContent' => true,
+            'userId'                                 => $userId,
+            'count'                                  => $count,
+            'includePromotedContent'                 => true,
             'withQuickPromoteEligibilityTweetFields' => true,
-            'withSuperFollowsUserFields' => true,
-            'withDownvotePerspective' => false,
-            'withReactionsMetadata' => false,
-            'withReactionsPerspective' => false,
-            'withSuperFollowsTweetFields' => true,
-            'withVoice' => false,
-            'withV2Timeline' => true,
+            'withSuperFollowsUserFields'             => true,
+            'withDownvotePerspective'                => false,
+            'withReactionsMetadata'                  => false,
+            'withReactionsPerspective'               => false,
+            'withSuperFollowsTweetFields'            => true,
+            'withVoice'                              => false,
+            'withV2Timeline'                         => true,
         ];
         $features = [
-            'dont_mention_me_view_api_enabled' => true,
-            'interactive_text_enabled' => true,
-            'responsive_web_uc_gql_enabled' => false,
-            'vibe_tweet_context_enabled' => false,
-            'responsive_web_edit_tweet_api_enabled' => false,
+            'dont_mention_me_view_api_enabled'               => true,
+            'interactive_text_enabled'                       => true,
+            'responsive_web_uc_gql_enabled'                  => false,
+            'vibe_tweet_context_enabled'                     => false,
+            'responsive_web_edit_tweet_api_enabled'          => false,
             'standardized_nudges_for_misinfo_nudges_enabled' => false,
-            'responsive_web_enhance_cards_enabled' => false,
+            'responsive_web_enhance_cards_enabled'           => false,
         ];
         $params = [
             'variables' => \json_encode($variables),
-            'features' => \json_encode($features),
+            'features'  => \json_encode($features),
         ];
 
         return $this->parseUserTweetsResponse($this->get($path, $params));
@@ -72,30 +71,30 @@ trait UserTrait
     {
         $path = 'graphql/ih3I-XV0ogyWjqsHqFQ9eA/Following';
         $variables = [
-            'userId' => $userId,
-            'count' => $count,
-            'includePromotedContent' => true,
-            'withSuperFollowsUserFields' => true,
-            'withDownvotePerspective' => false,
-            'withReactionsMetadata' => false,
-            'withReactionsPerspective' => false,
+            'userId'                      => $userId,
+            'count'                       => $count,
+            'includePromotedContent'      => true,
+            'withSuperFollowsUserFields'  => true,
+            'withDownvotePerspective'     => false,
+            'withReactionsMetadata'       => false,
+            'withReactionsPerspective'    => false,
             'withSuperFollowsTweetFields' => true,
         ];
         $features = [
-            'dont_mention_me_view_api_enabled' => true,
-            'interactive_text_enabled' => true,
-            'responsive_web_uc_gql_enabled' => false,
-            'vibe_tweet_context_enabled' => false,
+            'dont_mention_me_view_api_enabled'      => true,
+            'interactive_text_enabled'              => true,
+            'responsive_web_uc_gql_enabled'         => false,
+            'vibe_tweet_context_enabled'            => false,
             'responsive_web_edit_tweet_api_enabled' => false,
-            'standardized_nudges_misinfo' => false,
-            'responsive_web_enhance_cards_enabled' => false,
+            'standardized_nudges_misinfo'           => false,
+            'responsive_web_enhance_cards_enabled'  => false,
         ];
         if (null !== $page) {
             $variables['cursor'] = $page;
         }
         $params = [
             'variables' => \json_encode($variables),
-            'features' => \json_encode($features),
+            'features'  => \json_encode($features),
         ];
 
         return $this->parseUserFollowingResponse($this->get($path, $params));
@@ -104,6 +103,7 @@ trait UserTrait
     public function parseUserFollowingResponse($response)
     {
         $users = [];
+
         try {
             $users = $this->parseTimeline($response['data']['user']['result']['timeline']['timeline']);
 
@@ -117,30 +117,30 @@ trait UserTrait
     {
         $path = 'graphql/ysj_6Bszzl-X7e4bmvYpBA/Followers';
         $variables = [
-            'userId' => $userId,
-            'count' => $count,
-            'includePromotedContent' => false,
-            'withSuperFollowsUserFields' => true,
-            'withDownvotePerspective' => false,
-            'withReactionsMetadata' => false,
-            'withReactionsPerspective' => false,
+            'userId'                      => $userId,
+            'count'                       => $count,
+            'includePromotedContent'      => false,
+            'withSuperFollowsUserFields'  => true,
+            'withDownvotePerspective'     => false,
+            'withReactionsMetadata'       => false,
+            'withReactionsPerspective'    => false,
             'withSuperFollowsTweetFields' => true,
         ];
         $features = [
-            'dont_mention_me_view_api_enabled' => true,
-            'interactive_text_enabled' => true,
-            'responsive_web_uc_gql_enabled' => false,
-            'vibe_tweet_context_enabled' => false,
+            'dont_mention_me_view_api_enabled'      => true,
+            'interactive_text_enabled'              => true,
+            'responsive_web_uc_gql_enabled'         => false,
+            'vibe_tweet_context_enabled'            => false,
             'responsive_web_edit_tweet_api_enabled' => false,
-            'standardized_nudges_misinfo' => false,
-            'responsive_web_enhance_cards_enabled' => false,
+            'standardized_nudges_misinfo'           => false,
+            'responsive_web_enhance_cards_enabled'  => false,
         ];
         if (null !== $page) {
             $variables['cursor'] = $page;
         }
         $params = [
             'variables' => \json_encode($variables),
-            'features' => \json_encode($features),
+            'features'  => \json_encode($features),
         ];
 
         return $this->parseUserFollowersResponse($this->get($path, $params));
@@ -149,6 +149,7 @@ trait UserTrait
     public function parseUserFollowersResponse($response)
     {
         $users = [];
+
         try {
             $users = $this->parseTimeline($response['data']['user']['result']['timeline']['timeline']);
 
@@ -163,30 +164,30 @@ trait UserTrait
         $path = 'graphql/nzPbVEpjCRdwPadJw9IR8g/CombinedLists';
 
         $variables = [
-            'userId' => $userId,
-            'count' => $count,
-            'includePromotedContent' => true,
-            'withSuperFollowsUserFields' => true,
-            'withDownvotePerspective' => false,
-            'withReactionsMetadata' => false,
-            'withReactionsPerspective' => false,
+            'userId'                      => $userId,
+            'count'                       => $count,
+            'includePromotedContent'      => true,
+            'withSuperFollowsUserFields'  => true,
+            'withDownvotePerspective'     => false,
+            'withReactionsMetadata'       => false,
+            'withReactionsPerspective'    => false,
             'withSuperFollowsTweetFields' => true,
         ];
         $features = [
-            'dont_mention_me_view_api_enabled' => true,
-            'interactive_text_enabled' => true,
-            'responsive_web_uc_gql_enabled' => false,
-            'vibe_tweet_context_enabled' => false,
+            'dont_mention_me_view_api_enabled'      => true,
+            'interactive_text_enabled'              => true,
+            'responsive_web_uc_gql_enabled'         => false,
+            'vibe_tweet_context_enabled'            => false,
             'responsive_web_edit_tweet_api_enabled' => false,
-            'standardized_nudges_misinfo' => false,
-            'responsive_web_enhance_cards_enabled' => false,
+            'standardized_nudges_misinfo'           => false,
+            'responsive_web_enhance_cards_enabled'  => false,
         ];
         if (null !== $page) {
             $variables['cursor'] = $page;
         }
         $params = [
             'variables' => \json_encode($variables),
-            'features' => \json_encode($features),
+            'features'  => \json_encode($features),
         ];
 
         return $this->parseUserListsResponse($this->get($path, $params));
@@ -205,8 +206,8 @@ trait UserTrait
     {
         $path = 'graphql/mCbpQvZAw6zu_4PvuAUVVQ/UserByScreenName';
         $variables = [
-            'screen_name' => $username,
-            'withSafetyModeUserFields' => true,
+            'screen_name'                => $username,
+            'withSafetyModeUserFields'   => true,
             'withSuperFollowsUserFields' => true,
         ];
         $params = [

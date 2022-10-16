@@ -22,30 +22,30 @@ trait ListTrait
         $path = 'graphql/vUME3Ko13lCWTSs-fEKPZQ/ListLatestTweetsTimeline';
 
         $variables = [
-            'listId' => $listId,
-            'count' => $count,
-            'withSuperFollowsUserFields' => true,
-            'withDownvotePerspective' => false,
-            'withReactionsMetadata' => false,
-            'withReactionsPerspective' => false,
+            'listId'                      => $listId,
+            'count'                       => $count,
+            'withSuperFollowsUserFields'  => true,
+            'withDownvotePerspective'     => false,
+            'withReactionsMetadata'       => false,
+            'withReactionsPerspective'    => false,
             'withSuperFollowsTweetFields' => true,
         ];
 
         $features = [
-            'dont_mention_me_view_api_enabled' => true,
-            'interactive_text_enabled' => true,
-            'responsive_web_uc_gql_enabled' => false,
-            'vibe_tweet_context_enabled' => false,
-            'responsive_web_edit_tweet_api_enabled' => false,
+            'dont_mention_me_view_api_enabled'               => true,
+            'interactive_text_enabled'                       => true,
+            'responsive_web_uc_gql_enabled'                  => false,
+            'vibe_tweet_context_enabled'                     => false,
+            'responsive_web_edit_tweet_api_enabled'          => false,
             'standardized_nudges_for_misinfo_nudges_enabled' => false,
-            'responsive_web_enhance_cards_enabled' => false,
+            'responsive_web_enhance_cards_enabled'           => false,
         ];
         if (null !== $page) {
             $variables['cursor'] = $page;
         }
         $params = [
             'variables' => \json_encode($variables),
-            'features' => \json_encode($features),
+            'features'  => \json_encode($features),
         ];
 
         return $this->parseListTweetsResponseV2($this->get($path, $params));
@@ -63,6 +63,7 @@ trait ListTrait
     public function parseListTweetsResponse($response)
     {
         $tws = [];
+
         try {
             if (empty($response['data']['list']['tweets_timeline']['timeline']['instructions'])) {
                 return $tws;
@@ -81,17 +82,17 @@ trait ListTrait
                     $user = $result['core']['user_results']['result']['legacy'];
                     $tweet = $result['legacy'];
                     $tw = [
-                        'id' => $tweet['id_str'],
-                        'author_id' => $tweet['user_id_str'],
-                        'author_name' => $user['name'],
+                        'id'              => $tweet['id_str'],
+                        'author_id'       => $tweet['user_id_str'],
+                        'author_name'     => $user['name'],
                         'author_username' => $user['screen_name'],
-                        'text' => $tweet['full_text'],
-                        'created_at' => $tweet['created_at'],
-                        'retweet_count' => $tweet['retweet_count'],
-                        'reply_count' => $tweet['reply_count'],
-                        'like_count' => $tweet['favorite_count'],
-                        'quote_count' => $tweet['quote_count'],
-                        'self_thread' => (isset($tweet['self_thread']['id_str']) && $tweet['self_thread']['id_str']) ? $tweet['self_thread']['id_str'] : 0,
+                        'text'            => $tweet['full_text'],
+                        'created_at'      => $tweet['created_at'],
+                        'retweet_count'   => $tweet['retweet_count'],
+                        'reply_count'     => $tweet['reply_count'],
+                        'like_count'      => $tweet['favorite_count'],
+                        'quote_count'     => $tweet['quote_count'],
+                        'self_thread'     => (isset($tweet['self_thread']['id_str']) && $tweet['self_thread']['id_str']) ? $tweet['self_thread']['id_str'] : 0,
 
                         'lang' => $tweet['lang'],
                     ];
