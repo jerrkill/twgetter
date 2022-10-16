@@ -5,10 +5,10 @@ namespace Jerrkill\Twgetter;
 use Campo\UserAgent;
 use DateTime;
 use Exception;
-use Jerrkill\Twgetter\Exceptions\TokenExpiryException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
+use Jerrkill\Twgetter\Exceptions\TokenExpiryException;
 
 class Scraper
 {
@@ -25,7 +25,6 @@ class Scraper
 
     /** @var int */
     protected $total = 10000;
-
 
     /** @var string */
     protected $query;
@@ -56,7 +55,9 @@ class Scraper
 
     /**
      * TwitterScraper constructor.
+     *
      * @param $timeout
+     *
      * @throws Exception
      */
     private function __construct($options, $timeout)
@@ -72,7 +73,7 @@ class Scraper
             'timeout' => $this->timeout,
             'headers' => [
                 'User-Agent' => $this->generateUserAgent(),
-            ]
+            ],
         ]);
 
         $this->client = new Client($this->options);
@@ -81,8 +82,10 @@ class Scraper
 
     /**
      * @param int $timeout
-     * @return TwitterScraper
+     *
      * @throws Exception
+     *
+     * @return TwitterScraper
      */
     public static function make(array $options, $timeout = self::TIMEOUT)
     {
@@ -95,33 +98,38 @@ class Scraper
         var_dump(['111', $options]);
         $this->options = array_merge($this->options, $options);
         print_r($this->options);
+
         return $this;
     }
 
     /**
      * @param string $lang
+     *
      * @return $this
      */
     public function setLang(string $lang)
     {
         $this->lang = $lang;
+
         return $this;
     }
 
-
     /**
      * @param int $size
+     *
      * @return $this
      */
     public function setChunkSize(int $size)
     {
         $this->chunkSize = $size;
+
         return $this;
     }
 
     public function setTotal(int $total)
     {
         $this->total = $total;
+
         return $this;
     }
 
@@ -133,13 +141,15 @@ class Scraper
         $matches = [];
         preg_match('/gt=(\d+)/', $html, $matches);
         $this->options['headers']['X-Guest-Token'] = $matches[1];
+
         return $this;
     }
 
     /**
-     * @param string $query
+     * @param string        $query
      * @param DateTime|null $start
      * @param DateTime|null $end
+     *
      * @return $this
      */
     public function search(string $query, ?DateTime $start = null, ?DateTime $end = null)
@@ -147,12 +157,14 @@ class Scraper
         $this->query = $query;
         $this->startDate = $start;
         $this->endDate = $end;
+
         return $this;
     }
 
     /**
-     * @return $this
      * @throws GuzzleException
+     *
+     * @return $this
      */
     public function run()
     {
@@ -164,13 +176,15 @@ class Scraper
 
     /**
      * @param callable $closure
-     * @param bool $shouldClear
+     * @param bool     $shouldClear
+     *
      * @return $this
      */
     public function save(callable $closure, $shouldClear = false)
     {
         $this->saveClosure = $closure;
         $this->clearAfterEventSave = $shouldClear;
+
         return $this;
     }
 
@@ -182,13 +196,15 @@ class Scraper
         $tweets = array_values($this->tweets);
         $this->fetchedTweets = 0;
         $this->tweets = [];
+
         return $tweets;
     }
 
     /**
-     * @param string $query
+     * @param string        $query
      * @param DateTime|null $start
      * @param DateTime|null $end
+     *
      * @throws GuzzleException
      */
     protected function query(string $query, ?DateTime $start = null, ?DateTime $end = null)
@@ -264,16 +280,17 @@ class Scraper
             } catch (ClientException $ce) {
                 if ($ce->getCode() === 429) { // too many requests, refresh client and restrict interval
                     unset($this->options['headers']['X-Guest-Token']);
+
                     throw TokenExpiryException($ce->getMessage(), $ce->getCode(), $ce);
+
                     return $oldestTweetDate;
                 }
+
                 throw $ce; // something else was gone wrong
             }
             $json = json_decode($response->getBody()->getContents(), true);
 
-
             foreach ($json['globalObjects']['tweets'] as $scrapedTweet) {
-
                 $url = "https://twitter.com/{$json['globalObjects']['users'][$scrapedTweet['user_id']]['screen_name']}/status/{$scrapedTweet['id']}";
 
                 $hashtags = [];
@@ -306,27 +323,27 @@ class Scraper
                     $this->fetchedTweets++;
 
                     $this->tweets[$scrapedTweet['id']] = [
-                        'tweetId' => $scrapedTweet['id'],
-                        'url' => $url,
-                        'text' => $scrapedTweet['full_text'],
-                        'datetime' => $date,
-                        'user_id' => $scrapedTweet['user_id'],
-                        'user_name' => $json['globalObjects']['users'][$scrapedTweet['user_id']]['screen_name'],
-                        'user_fullname' => $json['globalObjects']['users'][$scrapedTweet['user_id']]['name'],
-                        'user_followers' => $json['globalObjects']['users'][$scrapedTweet['user_id']]['followers_count'],
-                        'user_following' => $json['globalObjects']['users'][$scrapedTweet['user_id']]['friends_count'],
-                        'retweets' => $scrapedTweet['retweet_count'],
-                        'replies' => $scrapedTweet['reply_count'],
-                        'likes' => $scrapedTweet['favorite_count'],
-                        'quotes' => $scrapedTweet['quote_count'],
-                        'hashtags' => $hashtags,
-                        'mentions' => $mentions,
-                        'images' => $images,
-                        'reply_to' => $replyTo,
-                        'lang' => $scrapedTweet['lang'],
-                        'self_thread' => $scrapedTweet['self_thread']['id_str'] ?? 0,
+                        'tweetId'           => $scrapedTweet['id'],
+                        'url'               => $url,
+                        'text'              => $scrapedTweet['full_text'],
+                        'datetime'          => $date,
+                        'user_id'           => $scrapedTweet['user_id'],
+                        'user_name'         => $json['globalObjects']['users'][$scrapedTweet['user_id']]['screen_name'],
+                        'user_fullname'     => $json['globalObjects']['users'][$scrapedTweet['user_id']]['name'],
+                        'user_followers'    => $json['globalObjects']['users'][$scrapedTweet['user_id']]['followers_count'],
+                        'user_following'    => $json['globalObjects']['users'][$scrapedTweet['user_id']]['friends_count'],
+                        'retweets'          => $scrapedTweet['retweet_count'],
+                        'replies'           => $scrapedTweet['reply_count'],
+                        'likes'             => $scrapedTweet['favorite_count'],
+                        'quotes'            => $scrapedTweet['quote_count'],
+                        'hashtags'          => $hashtags,
+                        'mentions'          => $mentions,
+                        'images'            => $images,
+                        'reply_to'          => $replyTo,
+                        'lang'              => $scrapedTweet['lang'],
+                        'self_thread'       => $scrapedTweet['self_thread']['id_str'] ?? 0,
                         'reply_to_tweet_id' => $scrapedTweet['in_reply_to_status_id_str'] ?? 0,
-                        'is_card' => isset($scrapedTweet['card']),
+                        'is_card'           => isset($scrapedTweet['card']),
                     ];
 
                     if ($this->fetchedTweets % $this->chunkSize === 0) {
@@ -354,7 +371,6 @@ class Scraper
                 $shouldScroll = false;
             }
             $cursor = $newCursor;
-
         } while ($shouldScroll);
 
         return $oldestTweetDate;
@@ -374,8 +390,9 @@ class Scraper
     }
 
     /**
-     * @return string
      * @throws Exception
+     *
+     * @return string
      */
     private function generateUserAgent()
     {

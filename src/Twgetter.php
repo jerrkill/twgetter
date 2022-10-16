@@ -13,15 +13,12 @@ namespace Jerrkill\Twgetter;
 
 use GuzzleHttp\Client;
 use Jerrkill\Twgetter\Exceptions\HttpException;
-use Jerrkill\Twgetter\Traits\ParseTrait;
 use Jerrkill\Twgetter\Traits\ListTrait;
+use Jerrkill\Twgetter\Traits\ParseTrait;
 use Jerrkill\Twgetter\Traits\SearchTrait;
 use Jerrkill\Twgetter\Traits\UserTrait;
 
 // use SergiX44\Scraper\TwitterScraper;
-
-use Jerrkill\Twgetter\Scraper;
-
 
 class Twgetter
 {
@@ -49,10 +46,10 @@ class Twgetter
 
         try {
             $response = $this->getHttpClient()->get($url, [
-                'query' => $params,
+                'query'   => $params,
                 'headers' => [
-                    'x-csrf-token' => $this->getXCsrfToken(),
-                    'cookie' => $this->getCookie(),
+                    'x-csrf-token'  => $this->getXCsrfToken(),
+                    'cookie'        => $this->getCookie(),
                     'Authorization' => $this->getAuthorization(),
                 ],
             ])->getBody()->getContents();
@@ -83,13 +80,14 @@ class Twgetter
         return config('twgetter.cookie');
     }
 
-    public static $scraperInstance = NULL;
+    public static $scraperInstance = null;
+
     public function getTwitterScraperInstance()
     {
-        if (static::$scraperInstance === NULL) {
+        if (static::$scraperInstance === null) {
             static::$scraperInstance = Scraper::make($this->guzzleOptions);
         }
+
         return static::$scraperInstance;
     }
-
 }
